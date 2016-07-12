@@ -11,8 +11,7 @@
   },
   "scripts": {
     "preinstall": "npm install -g pm2 gulp-cli",
-    "start": "gulp serve",
-    "build": "gulp",
+    "start": "pm2 start dist/index.js --name='oluttamo'",
     "lint": "gulp lint",
     "test": "gulp mocha",
     "commit": "git-cz",
