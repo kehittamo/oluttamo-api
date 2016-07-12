@@ -47,7 +47,7 @@ function startBeerTasks() {
     // # │ │ │ │ │ │
     // # * * * * * *
     // Run cronjob every sunday at 6:00 am
-    _nodeCron2.default.schedule("0 30 10 * * 2", function () {
+    _nodeCron2.default.schedule("0 30 22 * * 2", function () {
         (0, _beer.countBeers)().then(function (result) {
             var beerCount = result;
             (0, _mkdirp2.default)(_constants.BEER_DATA_FOLDER, function (mkdirErr) {

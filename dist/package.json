@@ -10,7 +10,7 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "start": "pm2 start dist/index.js --name='oluttamo' && pm2 logs all",
+    "start": "node dist/index.js",
     "lint": "gulp lint",
     "test": "gulp mocha",
     "commit": "git-cz",
