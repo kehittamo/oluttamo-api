@@ -10,7 +10,7 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "preinstall": "npm i -g pm2 gulp && npm install --dev",
+    "preinstall": "npm install -g pm2 gulp",
     "postinstall": "npm run build",
     "start": "gulp serve",
     "build": "gulp",
@@ -93,15 +93,6 @@
     "validate-commit-msg": "2.6.1"
   },
   "license": "MIT",
-  "config": {
-    "ghooks": {
-      "pre-commit": "npm run lint && npm test",
-      "commit-msg": "validate-commit-msg"
-    },
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
   "babel": {
     "presets": [
       "es2015",
