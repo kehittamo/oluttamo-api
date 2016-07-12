@@ -12,10 +12,6 @@ var _mongoose = require("mongoose");
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _pm = require("pm2");
-
-var _pm2 = _interopRequireDefault(_pm);
-
 var _env = require("./config/env");
 
 var _env2 = _interopRequireDefault(_env);
@@ -40,43 +36,12 @@ _mongoose2.default.connection.on("error", function () {
 });
 
 var debug = require("debug")("express-mongoose-es6-rest-api:index");
-if (process.env.NODE_ENV === "production") {
-    (function () {
-        var instances = process.env.WEB_CONCURRENCY || -1; // Set by Heroku or -1 to scale to max cpu core -1
-        var maxMemory = process.env.WEB_MEMORY || 256;
 
-        _pm2.default.connect(function () {
-            _pm2.default.start({
-                script: "./dist/index.js",
-                name: "oluttamo",
-                exec_mode: "fork",
-                instances: instances,
-                max_memory_restart: maxMemory
-            }, function (err) {
-                if (err) return console.error("Error while launching applications", err.stack || err);
-                console.log("PM2 and application has been succesfully started");
-                // Display logs in standard output
-                _pm2.default.launchBus(function (launchBusErr, bus) {
-                    if (launchBusErr) console.error(launchBusErr);
-                    console.log("[PM2] Log streaming started");
+// listen on port config.port
+_express2.default.listen(_env2.default.port, function () {
+    debug("server started on port " + _env2.default.port + " (" + _env2.default.env + ")");
+});
 
-                    bus.on("log:out", function (packet) {
-                        console.log("[App:%s] %s", packet.process.name, packet.data);
-                    });
-                    bus.on("log:err", function (packet) {
-                        console.error("[App:%s][Err] %s", packet.process.name, packet.data);
-                    });
-                });
-                return true;
-            });
-        });
-    })();
-} else {
-    // listen on port config.port
-    _express2.default.listen(_env2.default.port, function () {
-        debug("server started on port " + _env2.default.port + " (" + _env2.default.env + ")");
-    });
-}
 // Start cronjobs
 (0, _cronJobs2.default)();
 
