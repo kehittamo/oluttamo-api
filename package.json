@@ -10,7 +10,8 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "preinstall": "npm install -g pm2 gulp-cli",
+    "preinstall": "npm install -g gulp-cli",
+    "postinstall": "npm install -g pm2",
     "start": "pm2 start dist/index.js --name='oluttamo'",
     "lint": "gulp lint",
     "test": "gulp mocha",
