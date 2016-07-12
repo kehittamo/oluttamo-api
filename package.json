@@ -10,8 +10,8 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "preinstall": "npm install -g pm2",
-    "start": "pm2 start dist/index.js --name='oluttamo'",
+    "preinstall": "npm install -g pm2 && pm2 install pm2-logrotate",
+    "start": "pm2 start dist/index.js --name='oluttamo' && pm2 logs all",
     "lint": "gulp lint",
     "test": "gulp mocha",
     "commit": "git-cz",
