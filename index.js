@@ -17,13 +17,13 @@ mongoose.connection.on("error", () => {
 const debug = require("debug")("express-mongoose-es6-rest-api:index");
 if (process.env.NODE_ENV === "production") {
     const instances = process.env.WEB_CONCURRENCY || -1; // Set by Heroku or -1 to scale to max cpu core -1
-    const maxMemory = process.env.WEB_MEMORY || 512;
+    const maxMemory = process.env.WEB_MEMORY || 256;
 
     pm2.connect(() => {
         pm2.start({
             script: "./dist/index.js",
             name: "oluttamo",
-            exec_mode: "cluster",
+            exec_mode: "fork",
             instances,
             max_memory_restart: maxMemory,
         }, (err) => {
