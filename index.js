@@ -1,8 +1,40 @@
 import Promise from "bluebird";
 import mongoose from "mongoose";
+import pm2 from "pm2";
 import config from "./config/env";
 import app from "./config/express";
 import startCron from "./server/helpers/cronJobs";
+
+if (process.env.NODE_ENV === "production") {
+    const instances = process.env.WEB_CONCURRENCY || -1; // Set by Heroku or -1 to scale to max cpu core -1
+    const maxMemory = process.env.WEB_MEMORY || 512;
+
+    pm2.connect(() => {
+        pm2.start({
+            script: "./dist/index.js",
+            name: "oluttamo",
+            exec_mode: "cluster",
+            instances,
+            max_memory_restart: maxMemory,
+        }, (err) => {
+            if (err) return console.error("Error while launching applications", err.stack || err);
+            console.log("PM2 and application has been succesfully started");
+            // Display logs in standard output
+            pm2.launchBus((launchBusErr, bus) => {
+                if (launchBusErr) console.error(launchBusErr);
+                console.log("[PM2] Log streaming started");
+
+                bus.on("log:out", (packet) => {
+                    console.log("[App:%s] %s", packet.process.name, packet.data);
+                });
+                bus.on("log:err", (packet) => {
+                    console.error("[App:%s][Err] %s", packet.process.name, packet.data);
+                });
+            });
+            return true;
+        });
+    });
+}
 
 // promisify mongoose
 Promise.promisifyAll(mongoose);

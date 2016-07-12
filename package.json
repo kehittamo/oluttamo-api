@@ -10,7 +10,6 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "preinstall": "npm install -g pm2 && pm2 install pm2-logrotate",
     "start": "pm2 start dist/index.js --name='oluttamo' && pm2 logs all",
     "lint": "gulp lint",
     "test": "gulp mocha",
@@ -51,6 +50,8 @@
     "mongoose": "^4.3.7",
     "morgan": "~1.7.0",
     "node-cron": "^1.1.1",
+    "pm2": "^1.1.3",
+    "pm2-logrotate": "^1.3.1",
     "readline": "^1.3.0",
     "unzip": "^0.1.11",
     "wget-improved": "^1.3.0",
