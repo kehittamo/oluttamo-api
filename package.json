@@ -10,7 +10,7 @@
     "npm": "^3.5.0"
   },
   "scripts": {
-    "preinstall": "npm i -g pm2 gulp",
+    "preinstall": "npm i -g pm2 gulp && npm install --dev",
     "postinstall": "npm run build",
     "start": "gulp serve",
     "build": "gulp",
