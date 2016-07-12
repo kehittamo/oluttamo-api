@@ -5,6 +5,16 @@ import config from "./config/env";
 import app from "./config/express";
 import startCron from "./server/helpers/cronJobs";
 
+// promisify mongoose
+Promise.promisifyAll(mongoose);
+
+// connect to mongo db
+mongoose.connect(config.db, { server: { socketOptions: { keepAlive: 1 } } });
+mongoose.connection.on("error", () => {
+    throw new Error(`unable to connect to database: ${config.db}`);
+});
+
+const debug = require("debug")("express-mongoose-es6-rest-api:index");
 if (process.env.NODE_ENV === "production") {
     const instances = process.env.WEB_CONCURRENCY || -1; // Set by Heroku or -1 to scale to max cpu core -1
     const maxMemory = process.env.WEB_MEMORY || 512;
@@ -34,24 +44,12 @@ if (process.env.NODE_ENV === "production") {
             return true;
         });
     });
+} else {
+    // listen on port config.port
+    app.listen(config.port, () => {
+        debug(`server started on port ${config.port} (${config.env})`);
+    });
 }
-
-// promisify mongoose
-Promise.promisifyAll(mongoose);
-
-// connect to mongo db
-mongoose.connect(config.db, { server: { socketOptions: { keepAlive: 1 } } });
-mongoose.connection.on("error", () => {
-    throw new Error(`unable to connect to database: ${config.db}`);
-});
-
-const debug = require("debug")("express-mongoose-es6-rest-api:index");
-
-// listen on port config.port
-app.listen(config.port, () => {
-    debug(`server started on port ${config.port} (${config.env})`);
-});
-
 // Start cronjobs
 startCron();
 

@@ -30,6 +30,16 @@ var _cronJobs2 = _interopRequireDefault(_cronJobs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// promisify mongoose
+_bluebird2.default.promisifyAll(_mongoose2.default);
+
+// connect to mongo db
+_mongoose2.default.connect(_env2.default.db, { server: { socketOptions: { keepAlive: 1 } } });
+_mongoose2.default.connection.on("error", function () {
+    throw new Error("unable to connect to database: " + _env2.default.db);
+});
+
+var debug = require("debug")("express-mongoose-es6-rest-api:index");
 if (process.env.NODE_ENV === "production") {
     (function () {
         var instances = process.env.WEB_CONCURRENCY || -1; // Set by Heroku or -1 to scale to max cpu core -1
@@ -61,24 +71,12 @@ if (process.env.NODE_ENV === "production") {
             });
         });
     })();
+} else {
+    // listen on port config.port
+    _express2.default.listen(_env2.default.port, function () {
+        debug("server started on port " + _env2.default.port + " (" + _env2.default.env + ")");
+    });
 }
-
-// promisify mongoose
-_bluebird2.default.promisifyAll(_mongoose2.default);
-
-// connect to mongo db
-_mongoose2.default.connect(_env2.default.db, { server: { socketOptions: { keepAlive: 1 } } });
-_mongoose2.default.connection.on("error", function () {
-    throw new Error("unable to connect to database: " + _env2.default.db);
-});
-
-var debug = require("debug")("express-mongoose-es6-rest-api:index");
-
-// listen on port config.port
-_express2.default.listen(_env2.default.port, function () {
-    debug("server started on port " + _env2.default.port + " (" + _env2.default.env + ")");
-});
-
 // Start cronjobs
 (0, _cronJobs2.default)();
 
