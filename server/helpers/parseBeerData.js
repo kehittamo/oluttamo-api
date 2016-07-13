@@ -2,13 +2,14 @@
 import fs from "fs";
 import readline from "readline";
 import { XmlEntities } from "html-entities";
+import eachSeries from "async/eachSeries";
 import { validateCreateBeer } from "./beerDataValidator";
 import beerCtrl from "../controllers/beer";
 import { BEER_DATA_FOLDER, BEER_TXT_FILE_NAME } from "../../constants";
 
 let count = 0;
-const range = [0, 50000];
-const searchCollection = [];
+const range = [0, 500000];
+const beerCollection = [];
 
 function escapeBeerName(name) {
     return XmlEntities
@@ -17,16 +18,18 @@ function escapeBeerName(name) {
     .trim();
 }
 
-function createBeer(beerCount, beerData) {
+function createBeer(beerCount, beerData, cb) {
     if (beerCount > 0) {
         beerCtrl.update(beerData, (error, result) => {
             if (error) console.error("update beer error: ", error);
-            else console.log("Result: ", result);
+            else console.log("Update beer: ", result);
+            cb();
         });
     } else {
         beerCtrl.create(beerData, (error, result) => {
             if (error) console.error("create beer error: ", error);
-            else console.log("Result: ", result);
+            else console.log("Create beer: ", result);
+            cb();
         });
     }
 }
@@ -56,7 +59,7 @@ function parseData(beerCount) {
         const beerName = escapeBeerName(details[1]);
         const breweryName = escapeBeerName(details[3]);
         const beerFullName = `${breweryName} ${beerName}`;
-        searchCollection.push({
+        beerCollection.push({
             ratebeerId: +details[0],
             beerName,
             breweryName,
@@ -65,14 +68,17 @@ function parseData(beerCount) {
     });
 
     reader.on("close", () => {
-        for (const beerData of searchCollection) {
+        eachSeries(beerCollection, (beerData, callback) => {
             const validationData = validateCreateBeer(beerData);
             if (validationData.error === null) {
-                createBeer(beerCount, beerData);
+                createBeer(beerCount, beerData, () => {
+                    callback();
+                });
             } else {
                 console.error(beerData.beername, " validation error: ", validationData.error);
+                callback();
             }
-        }
+        });
     });
 }
 
