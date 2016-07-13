@@ -7,7 +7,7 @@ import beerCtrl from "../controllers/beer";
 import { BEER_DATA_FOLDER, BEER_TXT_FILE_NAME } from "../../constants";
 
 let count = 0;
-const range = [0, 10000];
+const range = [0, 50000];
 const searchCollection = [];
 
 function escapeBeerName(name) {
