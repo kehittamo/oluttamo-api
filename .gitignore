@@ -40,4 +40,4 @@ node_modules
 
 # Beer files
 /tmp
-/dist/tmp
+/dist
