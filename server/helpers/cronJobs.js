@@ -21,8 +21,8 @@ function startBeerTasks() {
     // # │ │ │ │ │ │
     // # │ │ │ │ │ │
     // # * * * * * *
-    // Run cronjob every sunday at 6:00 am
-    cron.schedule("0 50 7 * * 3", () => {
+    // Run cronjob every sunday at 6:00 am (Heroku server time is -3h to Finland timezone)
+    cron.schedule("0 0 3 * * 0", () => {
         countBeers()
         .then((result) => {
             const beerCount = result;
