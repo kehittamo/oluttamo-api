@@ -15,6 +15,7 @@ function escapeBeerName(name) {
     return XmlEntities
     .decode(name)
     .replace(/\0/g, "")
+    .replace(/’/g, "'")
     .trim();
 }
 
