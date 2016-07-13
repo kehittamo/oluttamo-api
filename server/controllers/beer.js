@@ -14,7 +14,7 @@ function load(req, res, next, id) {
  * Search beer and append to req.
  */
 function searchBeer(req, res, next, q) {
-    const query = new RegExp(`^${q.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")}`, "i");
+    const query = new RegExp(`${q.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")}`, "i");
     Beer.find({ beerFullName: query })
     .limit(50)
     .execAsync()
