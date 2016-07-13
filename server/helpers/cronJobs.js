@@ -22,7 +22,7 @@ function startBeerTasks() {
     // # │ │ │ │ │ │
     // # * * * * * *
     // Run cronjob every sunday at 6:00 am
-    cron.schedule("0 30 22 * * 2", () => {
+    cron.schedule("0 38 5 * * 3", () => {
         countBeers()
         .then((result) => {
             const beerCount = result;

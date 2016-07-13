@@ -28,7 +28,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 var count = 0;
-var range = [0, 1000000];
+var range = [0, 10000];
 var searchCollection = [];
 
 function escapeBeerName(name) {
