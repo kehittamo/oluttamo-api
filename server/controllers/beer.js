@@ -14,9 +14,15 @@ function load(req, res, next, id) {
  * Search beer and append to req.
  */
 function searchBeer(req, res, next, q) {
-    const query = new RegExp(`${q.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")}`, "i");
-    Beer.find({ beerFullName: query })
-    .limit(50)
+    // db.beers.find({$text: {$search: "sori gorilla"}}, {score: {$meta: "textScore"}}).sort({score:{$meta:"textScore"}})
+    const query = `${q.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")}`;
+    Beer.find({
+        $text: { $search: query } },
+        { score: { $meta: "textScore" } })
+    .sort({
+        score: { $meta: "textScore" } }
+    )
+    .limit(15)
     .execAsync()
     .then((beer) => {
         req.beer = beer;        // eslint-disable-line no-param-reassign
