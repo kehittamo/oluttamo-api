@@ -155,11 +155,11 @@ gulp.task("serve", ["clean"], () => runSequence("nodemon"));
 
 // heroku production task: clean dist, compile js files and copy non-js files.
 // see https://github.com/kehittamo/heroku-buildpack-nodejs-gulp
-// gulp.task("heroku:production", ["clean"], () => {
-//     runSequence(
-//         ["copy", "copy-public", "babel"]
-//     );
-// });
+gulp.task("heroku:production", ["clean"], () => {
+    runSequence(
+        ["copy", "copy-public", "babel"]
+    );
+});
 
 // default task: clean dist, compile js files and copy non-js files.
 gulp.task("default", ["clean"], () => {
