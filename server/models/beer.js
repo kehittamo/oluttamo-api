@@ -31,6 +31,9 @@ const BeerSchema = new mongoose.Schema({
     },
 });
 
+// Create text index to beerFullName
+BeerSchema.index({ beerFullName: "text" });
+
 /**
  * Add your
  * - pre-save hooks
