@@ -1,5 +1,5 @@
 {
-  "name": "oluttamo-node-client",
+  "name": "oluttamo-api",
   "version": "1.0.0",
   "description": "Node.js API for Oluttamo browser add-ons",
   "author": "Janne Saarela / Digitoimisto Kehittämö <janne.saarela@kehittamo.fi>",
