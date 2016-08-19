@@ -1,6 +1,17 @@
 import Beer from "../models/beer";
 
 /**
+ * Handle errors
+ */
+function handleDatabaseError(e, res, next) {
+    if (e.code && e.code === 11000) {
+        res.json({ error: "Beer already exists!" });
+    } else {
+        next(e);
+    }
+}
+
+/**
  * Load beer and append to req.
  */
 function load(req, res, next, id) {
@@ -105,7 +116,6 @@ function update(data, cb) {
  * @returns {Beer}
  */
 function createFromForm(req, res, next) {
-    console.log(req.body);
     const beer = new Beer({
         beerFullName: req.body.beerFullName,
         breweryName: req.body.breweryName,
@@ -115,7 +125,9 @@ function createFromForm(req, res, next) {
 
     beer.saveAsync()
         .then((savedBeer) => res.json(savedBeer))
-        .error((e) => next(e));
+        .error((e) => {
+            handleDatabaseError(e, res, next);
+        });
 }
 
 /**
