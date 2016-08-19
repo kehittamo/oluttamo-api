@@ -2,7 +2,7 @@ import Promise from "bluebird";
 import mongoose from "mongoose";
 import config from "./config/env";
 import app from "./config/express";
-import startCron from "./server/helpers/cronJobs";
+import startBeerTasks from "./server/helpers/cronJobs";
 
 // promisify mongoose
 Promise.promisifyAll(mongoose);
@@ -21,6 +21,6 @@ app.listen(config.port, () => {
 });
 
 // Start cronjobs
-startCron();
+startBeerTasks();
 
 export default app;
