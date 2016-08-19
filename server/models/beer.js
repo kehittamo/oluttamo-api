@@ -21,9 +21,10 @@ const BeerSchema = new mongoose.Schema({
         index: true,
     },
     ratebeerId: {
-        type: String,
+        type: Number,
         required: true,
         index: true,
+        unique: true,
     },
     createdAt: {
         type: Date,
