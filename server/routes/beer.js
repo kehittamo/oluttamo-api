@@ -2,8 +2,24 @@ import express from "express";
 import validate from "express-validation";
 import paramValidation from "../../config/param-validation";
 import beerCtrl from "../controllers/beer";
+import { validateRequest } from "../helpers/authenticationValidator";
 
 const router = express.Router();	// eslint-disable-line new-cap
+
+router.use((req, res, next) => {
+    if (req.method === "POST" || req.method === "PUT") {
+        validateRequest(req)
+        .then(() => {
+            next();
+        })
+        .catch((err) => {
+            res.status(401);
+            res.json({ error: err });
+        });
+    } else {
+        next();
+    }
+});
 
 router.route("/")
 	/** GET /api/beers - Get list of beers */
