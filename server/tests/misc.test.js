@@ -36,12 +36,14 @@ describe("## Misc", () => {
 		it("should handle express validation error - other values are also required", (done) => {
 			request(app)
 				.post("/api/beers")
+                .set({
+                    token: "development",
+                })
 				.send({
 					ratebeerId: "1234567890"
 				})
 				.expect(httpStatus.BAD_REQUEST)
 				.then(res => {
-          console.log(res.body.message);
 					expect(res.body.message).to.equal(`"breweryName" is required and "beerName" is required and "beerFullName" is required`);
 					done();
 				});

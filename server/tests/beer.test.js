@@ -15,21 +15,38 @@ describe("## Beer APIs", () => {
     beerFullName: "Sori Brewing Sori Brewing OoO Session IPA (2nd Edition)",
     breweryName: "Sori Brewing",
     beerName: "Sori Brewing OoO Session IPA (2nd Edition)",
-    ratebeerId: "280436",
+    ratebeerId: 280436,
 	};
 
 	describe("# POST /api/beers", () => {
 		it("should create a new beer", (done) => {
 			request(app)
 				.post("/api/beers")
+                .set({
+                    token: "development",
+                })
 				.send(beer)
 				.expect(httpStatus.OK)
 				.then(res => {
-          expect(res.body.beerFullName).to.equal(beer.beerFullName);
-          expect(res.body.breweryName).to.equal(beer.breweryName);
-          expect(res.body.beerName).to.equal(beer.beerName);
+                    expect(res.body.beerFullName).to.equal(beer.beerFullName);
+                    expect(res.body.breweryName).to.equal(beer.breweryName);
+                    expect(res.body.beerName).to.equal(beer.beerName);
 					expect(res.body.ratebeerId).to.equal(beer.ratebeerId);
 					beer = res.body;
+					done();
+				});
+		});
+
+        it("should throw 'beer already exists'-error", (done) => {
+			request(app)
+				.post("/api/beers")
+                .set({
+                    token: "development",
+                })
+				.send(beer)
+				.expect(httpStatus.OK)
+				.then(res => {
+                    expect(res.body.error).to.equal("Beer already exists!");
 					done();
 				});
 		});
@@ -41,9 +58,9 @@ describe("## Beer APIs", () => {
 				.get(`/api/beers/${beer.ratebeerId}`)
 				.expect(httpStatus.OK)
 				.then(res => {
-          expect(res.body.beerFullName).to.equal(beer.beerFullName);
-          expect(res.body.breweryName).to.equal(beer.breweryName);
-          expect(res.body.beerName).to.equal(beer.beerName);
+                    expect(res.body.beerFullName).to.equal(beer.beerFullName);
+                    expect(res.body.breweryName).to.equal(beer.breweryName);
+                    expect(res.body.beerName).to.equal(beer.beerName);
 					expect(res.body.ratebeerId).to.equal(beer.ratebeerId);
 					done();
 				});
@@ -51,11 +68,11 @@ describe("## Beer APIs", () => {
 
 		it("should report error with message - Not found, when beer does not exists", (done) => {
 			request(app)
-				.get("/api/beers/56c787ccc67fc16ccc1a5e92")
+				.get("/api/beers/94851547")
 				.expect(httpStatus.NOT_FOUND)
 				.then(res => {
-					expect(res.body.message).to.equal("Not Found");
-					done();
+    				expect(res.body.message).to.equal("Not Found");
+    				done();
 				});
 		});
 	});
@@ -65,11 +82,14 @@ describe("## Beer APIs", () => {
 			beer.beerName = "Sori Brewing OoO Session IPA (1st Edition)";
 			request(app)
 				.put(`/api/beers/${beer.ratebeerId}`)
+                .set({
+                    token: "development",
+                })
 				.send(beer)
 				.expect(httpStatus.OK)
 				.then(res => {
-          expect(res.body.beerFullName).to.equal(`${beer.breweryName} ${beer.beerName}`);
-          expect(res.body.breweryName).to.equal(beer.breweryName);
+                    expect(res.body.beerFullName).to.equal(`${beer.breweryName} ${beer.beerName}`);
+                    expect(res.body.breweryName).to.equal(beer.breweryName);
 					expect(res.body.beerName).to.equal("Sori Brewing OoO Session IPA (1st Edition)");
 					expect(res.body.ratebeerId).to.equal(beer.ratebeerId);
 					done();
