@@ -15,10 +15,12 @@ function handleDatabaseError(e, res, next) {
  * Load beer and append to req.
  */
 function load(req, res, next, id) {
-    Beer.get(id).then((beer) => {
-        req.beer = beer;        // eslint-disable-line no-param-reassign
-        return next();
-    }).error((e) => next(e));
+    Beer.get(id)
+        .then(beer => {
+            req.beer = beer; // eslint-disable-line no-param-reassign
+            return next();
+        })
+        .error(e => next(e));
 }
 
 /**
@@ -27,19 +29,21 @@ function load(req, res, next, id) {
 function searchBeer(req, res, next, q) {
     // db.beers.find({$text: {$search: "sori gorilla"}}, {score: {$meta: "textScore"}}).sort({score:{$meta:"textScore"}})
     const query = `${q.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")}`;
-    Beer.find({
-        $text: { $search: query } },
-        { score: { $meta: "textScore" } })
-    .sort({
-        score: { $meta: "textScore" } }
+    Beer.find(
+        {
+            $text: { $search: query },
+        },
+        { score: { $meta: "textScore" } }
     )
-    .limit(15)
-    .execAsync()
-    .then((beer) => {
-        req.beer = beer;        // eslint-disable-line no-param-reassign
-        return next();
-    })
-    .catch((e) => next(e));
+        .sort({
+            score: { $meta: "textScore" },
+        })
+        .execAsync()
+        .then(beer => {
+            req.beer = beer; // eslint-disable-line no-param-reassign
+            return next();
+        })
+        .catch(e => next(e));
 }
 
 /**
@@ -82,9 +86,10 @@ function create(data, cb) {
         ratebeerId: data.ratebeerId,
     });
 
-    beer.saveAsync()
-        .then((savedBeer) => cb(false, savedBeer))
-        .catch((e) => cb(e, null));
+    beer
+        .saveAsync()
+        .then(savedBeer => cb(false, savedBeer))
+        .catch(e => cb(e, null));
 }
 
 /**
@@ -102,12 +107,12 @@ function update(data, cb) {
     };
 
     Beer.findOneAndUpdateAsync(
-      { ratebeerId: data.ratebeerId },
-      { $set: beer },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+        { ratebeerId: data.ratebeerId },
+        { $set: beer },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
     )
-    .then((savedBeer) => cb(false, savedBeer))
-    .error((e) => cb(e, null));
+        .then(savedBeer => cb(false, savedBeer))
+        .error(e => cb(e, null));
 }
 
 /**
@@ -123,9 +128,10 @@ function createFromForm(req, res, next) {
         ratebeerId: req.body.ratebeerId,
     });
 
-    beer.saveAsync()
-        .then((savedBeer) => res.json(savedBeer))
-        .error((e) => {
+    beer
+        .saveAsync()
+        .then(savedBeer => res.json(savedBeer))
+        .error(e => {
             handleDatabaseError(e, res, next);
         });
 }
@@ -142,9 +148,10 @@ function updateFromForm(req, res, next) {
     beer.beerName = req.body.beerName;
     beer.ratebeerId = req.body.ratebeerId;
 
-    beer.saveAsync()
-        .then((savedBeer) => res.json(savedBeer))
-        .error((e) => next(e));
+    beer
+        .saveAsync()
+        .then(savedBeer => res.json(savedBeer))
+        .error(e => next(e));
 }
 
 /**
@@ -155,8 +162,9 @@ function updateFromForm(req, res, next) {
  */
 function list(req, res, next) {
     const { limit = 50, skip = 0 } = req.query;
-    Beer.list({ limit, skip }).then((beers) => res.json(beers))
-        .error((e) => next(e));
+    Beer.list({ limit, skip })
+        .then(beers => res.json(beers))
+        .error(e => next(e));
 }
 
 /**
@@ -165,9 +173,22 @@ function list(req, res, next) {
  */
 function remove(req, res, next) {
     const beer = req.beer;
-    beer.removeAsync()
-        .then((deletedBeer) => res.json(deletedBeer))
-        .error((e) => next(e));
+    beer
+        .removeAsync()
+        .then(deletedBeer => res.json(deletedBeer))
+        .error(e => next(e));
 }
 
-export default { load, get, create, update, list, remove, countBeers, searchBeer, getSearchResults, createFromForm, updateFromForm };
+export default {
+    load,
+    get,
+    create,
+    update,
+    list,
+    remove,
+    countBeers,
+    searchBeer,
+    getSearchResults,
+    createFromForm,
+    updateFromForm,
+};
