@@ -1,9 +1,8 @@
 {
     "name": "oluttamo-api",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Node.js API for Oluttamo browser add-ons",
-    "author":
-        "Janne Saarela / Digitoimisto Kehittämö <janne.saarela@kehittamo.fi>",
+    "author": "Janne Saarela / Digitoimisto Kehittämö <janne.saarela@kehittamo.fi>",
     "main": "index.js",
     "private": false,
     "engines": {
@@ -95,7 +94,12 @@
     },
     "license": "MIT",
     "babel": {
-        "presets": ["es2015", "stage-2"],
-        "plugins": ["add-module-exports"]
+        "presets": [
+            "es2015",
+            "stage-2"
+        ],
+        "plugins": [
+            "add-module-exports"
+        ]
     }
 }
